@@ -1,15 +1,9 @@
 <?
   include("User.php");
-
-  if( $_POST["username"] && $_POST["birth"] && $_POST["gender"] && $_POST["email"] && $_POST["signature"] ) {
+  include("File.php");
+  if( $_POST["username"] && $_POST["birth"] && $_POST["gender"] && $_POST["email"] ) {
     $user = new Users($_POST["username"], $_POST["email"], $_POST["gender"], $_POST["birth"]);
-    if($_POST["signature"] == "admin") {
-      $base64_out = base64_encode(strval(serialize($user)));
-    }
-    $base64_out_false = "User are not admin";
-  }
-  if( $_POST["base64"]) {
-    $base64_to_string = json_encode(unserialize(base64_decode($_POST["base64"])));
+    $base64_out = base64_encode(serialize($user));
   }
 ?>
 <!DOCTYPE html>
@@ -23,11 +17,10 @@
 </head>
 <body>
   <div class="container mt-5">
-  <h1 class="text-center">Hack_fun</h1>
     <div class="row">
       <div class="col-sm-6">
         <form method="post" action="">
-          <h3>Form_1_fixed</h3>
+          <h1>Form 1</h1>
           <div class="form-group">
             <label for="exampleInputEmail1">Username</label>
             <input type="text" class="form-control" name="username" placeholder="username">
@@ -35,10 +28,6 @@
           <div class="form-group">
             <label for="exampleInputEmail1">Email</label>
             <input type="email" class="form-control" name="email" placeholder="email">
-          </div>
-          <div class="form-group">
-            <label for="exampleInputEmail1">Signature</label>
-            <input type="password" class="form-control" name="signature" placeholder="signature">
           </div>
           <div class="form-group input-group mb-3">
             <div class="input-group-prepend">
@@ -61,16 +50,13 @@
             if($base64_out) {
               echo($base64_out);
             }
-            else {
-              echo($base64_out_false);
-            }
           ?>
         </p>
         <button class="btn btn-info" onclick="copyToClipboard('#base64_out')">Copy</button>
       </div>
       <div class="col-sm-6">
         <form method="post" action="">
-          <h3>Form_2_fixed</h3>
+          <h1>Form 2</h1>
           <div class="form-group">
             <label for="exampleInputEmail1">Base64</label>
             <input type="text" class="form-control" name="base64" placeholder="base_64">
@@ -79,14 +65,9 @@
         </form>
         <p id='base64_to_string'>
           <?
-            if($base64_to_string) {
-              echo($base64_to_string);
-              if(strpos($base64_to_string, '"role":"admin"')) {
-                echo('<p style="color:red;">flag{y0u_aR3_aDminsTrAt0r}</p>');
-              }
-              else {
-                echo('<p style="color:red;">You are not admin</p>');
-              }
+            if( $_POST["base64"]) {
+              $object = $_POST["base64"];
+              echo unserialize(base64_decode($object), ['allowed_classes' => false]);
             }
           ?>
         </p>

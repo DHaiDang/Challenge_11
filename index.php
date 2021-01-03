@@ -1,12 +1,9 @@
 <?
-  include("User.php");
-
+  include("User.php");  
+  include("File.php");
   if( $_POST["username"] && $_POST["birth"] && $_POST["gender"] && $_POST["email"] ) {
     $user = new Users($_POST["username"], $_POST["email"], $_POST["gender"], $_POST["birth"]);
-    $base64_out = base64_encode(strval(json_encode($user)));
-  }
-  if( $_POST["base64"]) {
-    $base64_to_string = base64_decode($_POST["base64"]);
+    $base64_out = base64_encode(serialize($user));
   }
 ?>
 <!DOCTYPE html>
@@ -68,14 +65,10 @@
         </form>
         <p id='base64_to_string'>
           <?
-            if($base64_to_string) {
-              echo($base64_to_string);
-              if(strpos($base64_to_string, '"role":"admin"')) {
-                echo('<p style="color:red;">flag{y0u_aR3_aDminsTrAt0r}</p>');
-              }
-              else {
-                echo('<p style="color:red;">You are not admin</p>');
-              }
+            if( $_POST["base64"]) {
+              $object = $_POST["base64"];
+              unserialize(base64_decode($object));
+              echo unserialize(base64_decode($object));
             }
           ?>
         </p>
